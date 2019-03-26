@@ -22,6 +22,7 @@ router.post('/api', (req, res, next) => {
   debug_router(input);
   getData(input).then(data=>{
     debug_data(data);
+    postText(data);
   });
 });
 
@@ -65,34 +66,36 @@ function openDialog(trigger_id){
 function getData(input){
   return new Promise(resolve=>{
     setTimeout(()=>{
-      resolve('OKだよ');
+      resolve('OKだよ' + input);
     },5000);
   })
 }
 
-// function postText(text){
-//   const options = {
-//     url: 'https://slack.com/api/chat.postMessage',
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'charset': 'utf8',
-//       'Authorization': 'Bearer ' + process.env.SLACK_BOT_USER_OAUTH_ACCESS_TOKEN
-//     },
-//     json: true,
-//     json: {
-//       token: process.env.SLACK_BOT_USER_OAUTH_ACCESS_TOKEN,
-//       trigger_id: trigger_id
-//     }
-//   };
-//   request(options, (err, res, body) => {
-//     if (err) {
-//       debug_request(err);
-//       return;
-//     }
-//     debug_request('post done');
-//     debug_request(body);
-//   });
-// }
+function postText(text){
+  const options = {
+    url: 'https://slack.com/api/chat.postMessage',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'charset': 'utf8',
+      'Authorization': 'Bearer ' + process.env.SLACK_BOT_USER_OAUTH_ACCESS_TOKEN
+    },
+    json: true,
+    json: {
+      token: process.env.SLACK_BOT_USER_OAUTH_ACCESS_TOKEN,
+      text: text,
+      channel: 'CHB0UV770'
+
+    }
+  };
+  request(options, (err, res, body) => {
+    if (err) {
+      debug_request(err);
+      return;
+    }
+    debug_request('post done');
+    debug_request(body);
+  });
+}
 
 module.exports = router;
